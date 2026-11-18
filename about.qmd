@@ -2,4 +2,15 @@
 title: "About"
 ---
 
-About this site
+## About This Project
+
+This project explores results from the November 3, 2026 general election in North Carolina, focusing on voter behavior and geographic voting patterns across the state.
+
+### Key Highlights
+
+- **Voting Method Comparison:** Analysis of how Democrats and Republicans utilized different voting methods, including Early Voting, Election Day, and Absentee by Mail.
+- **County-Level Trends:** A choropleth map illustrating Democratic vs. Republican margins across all 100 North Carolina counties.
+
+### Data Source
+
+All election data is sourced directly from the [North Carolina State Board of Elections (NCSBE)](https://www.ncsbe.gov/results-data/election-results/historical-election-results-data).

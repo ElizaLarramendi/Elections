@@ -125,3 +125,45 @@ ggplot(nc_map, aes(x = long, y = lat, group = group, fill = dem_margin)) +
     plot.subtitle = element_text(hjust = 0.5)
   )
 ```
+
+## Party Affiliation by Age Group
+
+This section looks at voter registration statistics across North Carolina to compare how party affiliations (Democrat, Republican, and Unaffiliated) vary across age cohorts.
+
+```{r}
+#| label: fig-age-party
+#| fig-cap: "Registered Voters by Age Group and Party Affiliation (November 2026)"
+
+# Read voter registration statistics
+voter_stats <- read_tsv("voter_stats_20261103.zip", show_col_types = FALSE)
+
+# Filter and summarize party affiliation across age groups
+age_party <- voter_stats |>
+  filter(
+    party_cd %in% c("DEM", "REP", "UNA"),
+    age %in% c("Age 18 - 25", "Age 26 - 40", "Age 41 - 65", "Age Over 66")
+  ) |>
+  summarize(total_voters = sum(total_voters, na.rm = TRUE), .by = c(party_cd, age)) |>
+  mutate(
+    age = factor(age, levels = c("Age 18 - 25", "Age 26 - 40", "Age 41 - 65", "Age Over 66")),
+    party = factor(party_cd, levels = c("DEM", "UNA", "REP"), labels = c("Democrat", "Unaffiliated", "Republican"))
+  )
+
+# Bar plot comparing age distribution across parties
+ggplot(age_party, aes(x = age, y = total_voters, fill = party)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  scale_fill_manual(
+    values = c("Democrat" = "#2166ac", "Unaffiliated" = "#8073ac", "Republican" = "#b2182b")
+  ) +
+  labs(
+    title = "Registered Voters by Age and Party in North Carolina",
+    subtitle = "Democrat, Unaffiliated, and Republican Affiliation",
+    x = "Age Group",
+    y = "Number of Registered Voters",
+    fill = "Party Affiliation"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+

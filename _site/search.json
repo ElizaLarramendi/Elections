@@ -21,10 +21,24 @@
     "text": "County Voting Trends Map\nThe map below illustrates party vote margins across all 100 North Carolina counties for the US Senate race. Blue indicates a Democratic margin, and red indicates a Republican margin.\n\n\n\n\n\n\n\n\nFigure 2: County Vote Margins in the 2026 North Carolina US Senate Race"
   },
   {
+    "objectID": "index.html#party-affiliation-by-age-group",
+    "href": "index.html#party-affiliation-by-age-group",
+    "title": "2026 North Carolina Election Analysis",
+    "section": "Party Affiliation by Age Group",
+    "text": "Party Affiliation by Age Group\nThis section looks at voter registration statistics across North Carolina to compare how party affiliations (Democrat, Republican, and Unaffiliated) vary across age cohorts.\n\n\n\n\n\n\n\n\nFigure 3: Registered Voters by Age Group and Party Affiliation (November 2026)"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site"
+    "text": "This project explores results from the November 3, 2026 general election in North Carolina, focusing on voter behavior and geographic voting patterns across the state.\n\n\n\nVoting Method Comparison: Analysis of how Democrats and Republicans utilized different voting methods, including Early Voting, Election Day, and Absentee by Mail.\nCounty-Level Trends: A choropleth map illustrating Democratic vs. Republican margins across all 100 North Carolina counties.\n\n\n\n\nAll election data is sourced directly from the North Carolina State Board of Elections (NCSBE)."
+  },
+  {
+    "objectID": "about.html#about-this-project",
+    "href": "about.html#about-this-project",
+    "title": "About",
+    "section": "",
+    "text": "This project explores results from the November 3, 2026 general election in North Carolina, focusing on voter behavior and geographic voting patterns across the state.\n\n\n\nVoting Method Comparison: Analysis of how Democrats and Republicans utilized different voting methods, including Early Voting, Election Day, and Absentee by Mail.\nCounty-Level Trends: A choropleth map illustrating Democratic vs. Republican margins across all 100 North Carolina counties.\n\n\n\n\nAll election data is sourced directly from the North Carolina State Board of Elections (NCSBE)."
   }
 ]
