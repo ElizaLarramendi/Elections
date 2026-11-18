@@ -126,6 +126,14 @@ ggplot(nc_map, aes(x = long, y = lat, group = group, fill = dem_margin)) +
   )
 ```
 
+::: {.callout-note}
+### How to Read This Map
+
+- **Blue:** Counties won by the Democratic candidate (higher percentages indicate larger victory margins, commonly in urban centers like Wake, Durham, and Mecklenburg).
+- **Red:** Counties won by the Republican candidate (strongest across rural counties).
+- **White / Light Shading:** Close or competitive counties where vote shares were nearly even.
+:::
+
 ## Party Affiliation by Age Group
 
 This section looks at voter registration statistics across North Carolina to compare how party affiliations (Democrat, Republican, and Unaffiliated) vary across age cohorts.
