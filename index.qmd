@@ -146,21 +146,30 @@ age_party <- voter_stats |>
   summarize(total_voters = sum(total_voters, na.rm = TRUE), .by = c(party_cd, age)) |>
   mutate(
     age = factor(age, levels = c("Age 18 - 25", "Age 26 - 40", "Age 41 - 65", "Age Over 66")),
-    party = factor(party_cd, levels = c("DEM", "UNA", "REP"), labels = c("Democrat", "Unaffiliated", "Republican"))
+    party = factor(party_cd, levels = c("DEM", "UNA", "REP"), labels = c("Democrat", "Unaffiliated", "Republican")),
+    share = total_voters / sum(total_voters),
+    label = percent(share, accuracy = 0.1),
+    .by = age
   )
 
-# Bar plot comparing age distribution across parties
-ggplot(age_party, aes(x = age, y = total_voters, fill = party)) +
+# Bar plot comparing age distribution across parties with percentages
+ggplot(age_party, aes(x = age, y = share, fill = party)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  scale_y_continuous(labels = label_number(scale_cut = cut_short_scale())) +
+  geom_text(
+    aes(label = label),
+    position = position_dodge(width = 0.8),
+    vjust = -0.4,
+    size = 3.2
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.62)) +
   scale_fill_manual(
     values = c("Democrat" = "#2166ac", "Unaffiliated" = "#8073ac", "Republican" = "#b2182b")
   ) +
   labs(
     title = "Registered Voters by Age and Party in North Carolina",
-    subtitle = "Democrat, Unaffiliated, and Republican Affiliation",
+    subtitle = "Percentage breakdown within each age cohort",
     x = "Age Group",
-    y = "Number of Registered Voters",
+    y = "Share of Age Group",
     fill = "Party Affiliation"
   ) +
   theme_minimal() +
