@@ -1,7 +1,127 @@
 ---
-title: "Elections"
+title: "2026 North Carolina Election Analysis"
+format: html
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
-This is a Quarto website.
+```{r}
+#| label: setup
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(knitr)
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+# Read the 2026 election precinct data
+results <- read_csv("results_pct_20261103.csv", show_col_types = FALSE)
+```
+
+## Voting Method by Party
+
+This section examines how Democrats and Republicans cast their ballots in the statewide US Senate race (Early Voting, Election Day, or Absentee by Mail).
+
+```{r}
+#| label: tbl-methods
+#| tbl-cap: "Voting Method Breakdown by Party (US Senate)"
+
+# Summarize vote counts by party and voting method
+methods_summary <- results |>
+  filter(`Contest Name` == "US SENATE", `Choice Party` %in% c("DEM", "REP")) |>
+  summarize(
+    `Early Voting` = sum(`Early Voting`, na.rm = TRUE),
+    `Election Day` = sum(`Election Day`, na.rm = TRUE),
+    `Absentee by Mail` = sum(`Absentee by Mail`, na.rm = TRUE),
+    .by = `Choice Party`
+  ) |>
+  pivot_longer(
+    cols = c(`Early Voting`, `Election Day`, `Absentee by Mail`),
+    names_to = "Method",
+    values_to = "Votes"
+  ) |>
+  mutate(
+    Percentage = Votes / sum(Votes),
+    .by = `Choice Party`
+  )
+
+# Display summary table
+methods_summary |>
+  mutate(
+    `Total Votes` = comma(Votes),
+    Share = percent(Percentage, accuracy = 0.1)
+  ) |>
+  select(`Party` = `Choice Party`, `Voting Method` = Method, `Total Votes`, Share) |>
+  kable()
+```
+
+```{r}
+#| label: fig-methods
+#| fig-cap: "Comparison of Voting Methods by Party in the 2026 US Senate Race"
+
+# Plot the percentage of votes cast via each method
+ggplot(methods_summary, aes(x = Method, y = Percentage, fill = `Choice Party`)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(
+    values = c("DEM" = "#2166ac", "REP" = "#b2182b"),
+    labels = c("DEM" = "Democrat", "REP" = "Republican")
+  ) +
+  labs(
+    title = "Voting Method by Party in North Carolina",
+    subtitle = "2026 US Senate Race",
+    x = "Voting Method",
+    y = "Share of Party's Total Votes",
+    fill = "Party"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+## County Voting Trends Map
+
+The map below illustrates party vote margins across all 100 North Carolina counties for the US Senate race. Blue indicates a Democratic margin, and red indicates a Republican margin.
+
+```{r}
+#| label: fig-map
+#| fig-cap: "County Vote Margins in the 2026 North Carolina US Senate Race"
+
+# Compute Democratic vs. Republican margin by county
+county_margin <- results |>
+  filter(`Contest Name` == "US SENATE", `Choice Party` %in% c("DEM", "REP")) |>
+  summarize(votes = sum(`Total Votes`, na.rm = TRUE), .by = c(County, `Choice Party`)) |>
+  pivot_wider(names_from = `Choice Party`, values_from = votes, values_fill = 0) |>
+  mutate(
+    subregion = tolower(County),
+    dem_margin = (DEM - REP) / (DEM + REP)
+  )
+
+# Merge with North Carolina county map coordinates
+nc_map <- map_data("county", "north carolina") |>
+  left_join(county_margin, by = "subregion")
+
+# Draw choropleth map
+ggplot(nc_map, aes(x = long, y = lat, group = group, fill = dem_margin)) +
+  geom_polygon(color = "white", linewidth = 0.2) +
+  coord_quickmap() +
+  scale_fill_gradient2(
+    low = "#b2182b",
+    mid = "#f7f7f7",
+    high = "#2166ac",
+    midpoint = 0,
+    labels = percent_format(accuracy = 1),
+    name = "Margin (DEM vs REP)"
+  ) +
+  labs(
+    title = "2026 North Carolina US Senate Results by County",
+    subtitle = "Margin: (DEM - REP) / (DEM + REP)"
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+```
