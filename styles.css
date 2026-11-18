@@ -1,1 +1,17 @@
-/* css styles */
+/* Custom website styling */
+body {
+  background-color: #f7f9fc;
+  color: #2b2d42;
+}
+
+/* Give tables and code blocks a clean card appearance */
+.table {
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.cell-output-display {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
